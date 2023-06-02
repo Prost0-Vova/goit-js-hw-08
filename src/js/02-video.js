@@ -3,7 +3,8 @@ import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
 const iframe = document.querySelector('iframe');
-const vimeoPlayer = new Player('iframe', {
+
+const vimeoPlayer = new Player(iframe, {
   title: true,
   autoplay: true,
   loop: false,
@@ -11,13 +12,15 @@ const vimeoPlayer = new Player('iframe', {
   quality: '1080p',
 });
 
-const timeKey = 'videoplayer-current-time';
+const time_key = 'videoplayer-current-time';
 
-const getCurrentTime = function (currentTime) {
-    
-    const seconds = currentTime.seconds;
-    localStorage
-}
+const getTime = function (currentTime) {
+  const seconds = currentTime.seconds;
+  localStorage.setItem(time_key, JSON.stringify(seconds));
+};
+
+vimeoPlayer.on('timeupdate', throttle(getTime, 1000));
+
+vimeoPlayer.setCurrentTime(JSON.parse(localStorage.getItem(time_key)) || 0);
 
 
-vimeoPlayer.on('timeupdate', throttle(getCurrentTime, 1000));
